@@ -63,7 +63,7 @@ public class Main {
 					e.printStackTrace();
 				}
 				long keyVal = d.getTime();
-				Double val = Double.parseDouble(((String) row.get(1)).replace('€', ' ').replace(',', '.'));
+				Double val = Double.parseDouble(((String) row.get(1)).replaceAll("\\U+20AC", "").replace(',', '.'));
 				if (map.containsKey(keyVal)) {
 					Double value = (Double) map.get(keyVal);
 					map.put(keyVal, value + val);
