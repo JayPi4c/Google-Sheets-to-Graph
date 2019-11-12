@@ -1,5 +1,6 @@
 package com.JayPi4c;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.text.ParseException;
@@ -11,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
@@ -18,7 +22,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 public class Main {
 	public static void main(String... args) throws IOException, GeneralSecurityException {
 		final String spreadsheetId = "17Dy3kRz5EAhK6_zimq8lOMbBz6OsEdqxmDdHdx_PX1s";
-		final String range = "A:D";
+		final String range = "A:B";
 		Sheets service = SpreadsheetConnector.getService();
 
 		HashMap<Number, Number> map = getValues(service, spreadsheetId, range);
@@ -32,7 +36,14 @@ public class Main {
 			DataPair pair = pairs.get(i);
 			pair.addToSummedCosts(previousCosts);
 			previousCosts = pair.summedCosts;
-			pairs.get(i).print();
+			// pairs.get(i).print();
+		}
+
+		JFreeChart chart = Graph.createChart(pairs);
+		try {
+			ChartUtils.saveChartAsPNG(new File("line_chart.png"), chart, 800, 400);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		/*
@@ -63,7 +74,7 @@ public class Main {
 					e.printStackTrace();
 				}
 				long keyVal = d.getTime();
-				Double val = Double.parseDouble(((String) row.get(1)).replaceAll("\\U+20AC", "").replace(',', '.'));
+				Double val = Double.parseDouble(((String) row.get(1)).replaceAll("\\u20AC", "").replace(',', '.'));
 				if (map.containsKey(keyVal)) {
 					Double value = (Double) map.get(keyVal);
 					map.put(keyVal, value + val);
