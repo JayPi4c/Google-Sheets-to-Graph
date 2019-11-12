@@ -2,7 +2,7 @@ package com.JayPi4c;
 
 import java.util.Date;
 
-public class DataPair implements Comparable<DataPair> {
+public class DataPair {
 
 	public static final Date STARTDATE = new Date(1567209600000L);
 
@@ -26,11 +26,6 @@ public class DataPair implements Comparable<DataPair> {
 	void addToSummedCosts(double previousCosts) {
 		summedCosts = costs + previousCosts;
 		averageCosts = summedCosts / daysPast;
-	}
-
-	@Override
-	public int compareTo(DataPair o) {
-		return (int) (o.unixtimeStamp - unixtimeStamp);
 	}
 
 	void print() {
