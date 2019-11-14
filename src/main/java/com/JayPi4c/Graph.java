@@ -18,11 +18,11 @@ public class Graph {
 		DefaultCategoryDataset[] datasets = createDataset(pairs);
 
 		CategoryPlot plot = new CategoryPlot();
-		CategoryItemRenderer lineRenderer = new LineAndShapeRenderer();
+		CategoryItemRenderer lineRenderer = new LineAndShapeRenderer(true, false);
 		plot.setDataset(0, datasets[1]);
 		plot.setRenderer(0, lineRenderer);
 
-		CategoryItemRenderer lineRenderer1 = new LineAndShapeRenderer();
+		CategoryItemRenderer lineRenderer1 = new LineAndShapeRenderer(true, false);
 		plot.setDataset(1, datasets[2]);
 		plot.setRenderer(1, lineRenderer1);
 
@@ -40,7 +40,7 @@ public class Graph {
 	private static DefaultCategoryDataset[] createDataset(ArrayList<DataPair> pairs) {
 		String series1 = "Ausgaben";
 		String series2 = "durchschnittliche Ausgaben";
-		String series3 = "tägliches Budget";
+		String series3 = "t\u00E4gliches Budget";
 		DefaultCategoryDataset datasets[] = new DefaultCategoryDataset[3];
 		for (int i = 0; i < datasets.length; i++)
 			datasets[i] = new DefaultCategoryDataset();
