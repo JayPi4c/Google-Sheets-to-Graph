@@ -1,5 +1,6 @@
 package com.JayPi4c;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -24,10 +25,13 @@ public class Graph {
 	// https://stackoverflow.com/questions/35876221/jfreechart-real-time-line-graph-with-two-lines
 	// http://www.jfree.org/forum/viewtopic.php?t=13651
 	// https://www.tutorialspoint.com/jfreechart/jfreechart_timeseries_chart.htm
+	// https://stackoverflow.com/questions/21427762/jfreechart-set-line-colors-for-xy-chart-4-series-2-datasets-dual-axes
 
 	public static JFreeChart createChart(ArrayList<DataPair> pairs) {
 		XYDataset data1 = createDataset(pairs);
 		XYItemRenderer renderer1 = new StandardXYItemRenderer();
+		renderer1.setSeriesPaint(0, Color.RED);
+		renderer1.setSeriesPaint(1, Color.GREEN);
 		DateAxis domainAxis = new DateAxis("Datum");
 		domainAxis.setTickMarkPosition(DateTickMarkPosition.MIDDLE);
 		ValueAxis rangeAxis = new NumberAxis("Ausgaben in \u20ac");
@@ -35,6 +39,7 @@ public class Graph {
 
 		XYDataset data2 = createCostsDataset(pairs);
 		XYItemRenderer renderer2 = new XYBarRenderer();
+		renderer2.setSeriesPaint(0, new Color(135, 206, 250));
 		plot.setDataset(1, data2);
 		plot.setRenderer(1, renderer2);
 
