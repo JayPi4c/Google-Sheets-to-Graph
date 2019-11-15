@@ -1,56 +1,67 @@
 package com.JayPi4c;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.DateTickMarkPosition;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.renderer.category.CategoryItemRenderer;
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
-import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.data.time.Day;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.xy.XYDataset;
 
 public class Graph {
 
+	// Quellen:
+	// https://github.com/ngadde/playground/blob/master/com.iis.sample1/src/main/java/demo/OverlaidXYPlotDemo1.java
+	// https://stackoverflow.com/questions/35876221/jfreechart-real-time-line-graph-with-two-lines
+	// http://www.jfree.org/forum/viewtopic.php?t=13651
+	// https://www.tutorialspoint.com/jfreechart/jfreechart_timeseries_chart.htm
+
 	public static JFreeChart createChart(ArrayList<DataPair> pairs) {
+		XYDataset data1 = createDataset(pairs);
+		XYItemRenderer renderer1 = new StandardXYItemRenderer();
+		DateAxis domainAxis = new DateAxis("Datum");
+		domainAxis.setTickMarkPosition(DateTickMarkPosition.MIDDLE);
+		ValueAxis rangeAxis = new NumberAxis("Ausgaben in \u20ac");
+		XYPlot plot = new XYPlot(data1, domainAxis, rangeAxis, renderer1);
 
-		DefaultCategoryDataset[] datasets = createDataset(pairs);
+		XYDataset data2 = createCostsDataset(pairs);
+		XYItemRenderer renderer2 = new XYBarRenderer();
+		plot.setDataset(1, data2);
+		plot.setRenderer(1, renderer2);
 
-		CategoryPlot plot = new CategoryPlot();
-		CategoryItemRenderer lineRenderer = new LineAndShapeRenderer(true, false);
-		plot.setDataset(0, datasets[1]);
-		plot.setRenderer(0, lineRenderer);
-
-		CategoryItemRenderer lineRenderer1 = new LineAndShapeRenderer(true, false);
-		plot.setDataset(1, datasets[2]);
-		plot.setRenderer(1, lineRenderer1);
-
-		CategoryItemRenderer barRenderer = new BarRenderer();
-		plot.setDataset(2, datasets[0]);
-		plot.setRenderer(2, barRenderer);
-
-		plot.setDomainAxis(new CategoryAxis("Zeit"));
-		plot.setRangeAxis(new NumberAxis("Ausgaben"));
-		JFreeChart chart = new JFreeChart(plot);
-		chart.setTitle("Ausgaben im Laufe der Zeit");
-		return chart;
+		return new JFreeChart(plot);
 	}
 
-	private static DefaultCategoryDataset[] createDataset(ArrayList<DataPair> pairs) {
-		String series1 = "Ausgaben";
-		String series2 = "durchschnittliche Ausgaben";
-		String series3 = "t\u00E4gliches Budget";
-		DefaultCategoryDataset datasets[] = new DefaultCategoryDataset[3];
-		for (int i = 0; i < datasets.length; i++)
-			datasets[i] = new DefaultCategoryDataset();
-
-		for (DataPair pair : pairs) {
-			String s = pair.datePart;
-			datasets[0].addValue(pair.costs, series1, s);
-			datasets[1].addValue(pair.averageCosts, series2, s);
-			datasets[2].addValue(8.22, series3, s);
+	private static XYDataset createDataset(ArrayList<DataPair> pairs) {
+		final TimeSeries series1 = new TimeSeries("t\u00e4gliches Budget");
+		final TimeSeries series2 = new TimeSeries("\u00d8 Ausgaben");
+		for (DataPair p : pairs) {
+			Day d = new Day(new Date(p.unixtimeStamp));
+			series1.add(d, 8.22);
+			series2.add(d, p.averageCosts);
 		}
-		return datasets;
+		TimeSeriesCollection tsc = new TimeSeriesCollection();
+		tsc.addSeries(series1);
+		tsc.addSeries(series2);
+		return tsc;
 	}
+
+	private static XYDataset createCostsDataset(ArrayList<DataPair> pairs) {
+		final TimeSeries series = new TimeSeries("Ausgaben");
+		for (DataPair p : pairs) {
+			Day d = new Day(new Date(p.unixtimeStamp));
+			series.add(d, p.costs);
+		}
+		return new TimeSeriesCollection(series);
+	}
+
 }
