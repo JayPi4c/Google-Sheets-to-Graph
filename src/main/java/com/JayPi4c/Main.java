@@ -41,7 +41,7 @@ public class Main {
 
 		JFreeChart chart = Graph.createChart(pairs);
 		try {
-			ChartUtils.saveChartAsPNG(new File("line_chart.png"), chart, 800, 400);
+			ChartUtils.saveChartAsPNG(new File("chart.png"), chart, 800, 400);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

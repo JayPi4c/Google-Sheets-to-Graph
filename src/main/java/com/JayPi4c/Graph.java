@@ -14,6 +14,7 @@ import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.time.Day;
+import org.jfree.data.time.TimePeriodAnchor;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
@@ -57,6 +58,7 @@ public class Graph {
 		TimeSeriesCollection tsc = new TimeSeriesCollection();
 		tsc.addSeries(series1);
 		tsc.addSeries(series2);
+		tsc.setXPosition(TimePeriodAnchor.MIDDLE);
 		return tsc;
 	}
 
