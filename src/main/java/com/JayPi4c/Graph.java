@@ -52,7 +52,7 @@ public class Graph {
 		final TimeSeries series2 = new TimeSeries("\u00d8 Ausgaben");
 		for (DataPair p : pairs) {
 			Day d = new Day(new Date(p.unixtimeStamp));
-			series1.add(d, 8.22);
+			series1.add(d, 8.53);
 			series2.add(d, p.averageCosts);
 		}
 		TimeSeriesCollection tsc = new TimeSeriesCollection();
