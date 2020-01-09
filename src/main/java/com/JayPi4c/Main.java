@@ -21,7 +21,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 //http://zetcode.com/java/jfreechart/
 public class Main {
 	public static void main(String... args) throws IOException, GeneralSecurityException {
-		final String spreadsheetId = "17Dy3kRz5EAhK6_zimq8lOMbBz6OsEdqxmDdHdx_PX1s";
+		final String spreadsheetId = args.length > 0 ? args[0] : "17Dy3kRz5EAhK6_zimq8lOMbBz6OsEdqxmDdHdx_PX1s";
 		final String range = "A:B";
 		Sheets service = SpreadsheetConnector.getService();
 
