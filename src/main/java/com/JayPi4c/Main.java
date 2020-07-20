@@ -1,5 +1,6 @@
 package com.JayPi4c;
 
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -12,8 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
+import org.jfree.graphics2d.svg.SVGGraphics2D;
+import org.jfree.graphics2d.svg.SVGUtils;
 
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
@@ -41,7 +43,13 @@ public class Main {
 
 		JFreeChart chart = Graph.createChart(pairs);
 		try {
-			ChartUtils.saveChartAsPNG(new File("chart.png"), chart, 800, 400);
+			// ChartUtils.saveChartAsPNG(new File("chart.png"), chart, 800, 400);
+
+			SVGGraphics2D g2 = new SVGGraphics2D(800, 400);
+			Rectangle r = new Rectangle(0, 0, 800, 400);
+			chart.draw(g2, r);
+			SVGUtils.writeToSVG(new File("./chart.svg"), g2.getSVGElement());
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
