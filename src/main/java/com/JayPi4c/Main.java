@@ -55,13 +55,16 @@ public class Main {
 		}
 
 		JFreeChart chart = Graph.createChart(pairs);
+		File chartFile;
 		try {
 			// ChartUtils.saveChartAsPNG(new File("chart.png"), chart, 800, 400);
 
 			SVGGraphics2D g2 = new SVGGraphics2D(800, 400);
 			Rectangle r = new Rectangle(0, 0, 800, 400);
 			chart.draw(g2, r);
-			SVGUtils.writeToSVG(new File("./chart.svg"), g2.getSVGElement());
+			SVGUtils.writeToSVG(chartFile = new File("./chart.svg"), g2.getSVGElement());
+
+			new Frame(chartFile);
 
 		} catch (IOException e) {
 			e.printStackTrace();
