@@ -4,7 +4,8 @@ import java.util.Date;
 
 public class DataPair {
 
-	public static final Date STARTDATE = new Date(1567209600000L);
+	public static final Date STARTDATE = new Date(Long.parseLong(PropertyHelper.getProperty("startdate")));
+	public static final long MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
 
 	long unixtimeStamp;
 	String datePart;
@@ -20,7 +21,7 @@ public class DataPair {
 		datePart = date.toString().substring(4, 10);
 		this.costs = costs;
 		long diff = date.getTime() - STARTDATE.getTime();
-		daysPast = (int) (diff / (1000 * 60 * 60 * 24));
+		daysPast = (int) (diff / MILLIS_IN_DAY);
 	}
 
 	void addToSummedCosts(double previousCosts) {
