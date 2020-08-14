@@ -33,9 +33,9 @@ public class Graph {
 		XYItemRenderer renderer1 = new StandardXYItemRenderer();
 		renderer1.setSeriesPaint(0, Color.RED);
 		renderer1.setSeriesPaint(1, Color.GREEN);
-		DateAxis domainAxis = new DateAxis("Datum");
+		DateAxis domainAxis = new DateAxis(Messages.getString("chart.axis.name.x"));
 		domainAxis.setTickMarkPosition(DateTickMarkPosition.MIDDLE);
-		ValueAxis rangeAxis = new NumberAxis("Ausgaben in \u20ac");
+		ValueAxis rangeAxis = new NumberAxis(Messages.getString("chart.axis.name.y"));
 		XYPlot plot = new XYPlot(data1, domainAxis, rangeAxis, renderer1);
 
 		XYDataset data2 = createCostsDataset(pairs);
@@ -48,8 +48,8 @@ public class Graph {
 	}
 
 	private static XYDataset createDataset(ArrayList<DataPair> pairs) {
-		final TimeSeries series1 = new TimeSeries("t\u00e4gliches Budget");
-		final TimeSeries series2 = new TimeSeries("\u00d8 Ausgaben");
+		final TimeSeries series1 = new TimeSeries(Messages.getString("chart.timeseries.daily"));
+		final TimeSeries series2 = new TimeSeries(Messages.getString("chart.timeseries.average"));
 		for (DataPair p : pairs) {
 			Day d = new Day(new Date(p.unixtimeStamp));
 			series1.add(d, 8.53);
@@ -63,7 +63,7 @@ public class Graph {
 	}
 
 	private static XYDataset createCostsDataset(ArrayList<DataPair> pairs) {
-		final TimeSeries series = new TimeSeries("Ausgaben");
+		final TimeSeries series = new TimeSeries(Messages.getString("chart.timeseries.absolute"));
 		for (DataPair p : pairs) {
 			Day d = new Day(new Date(p.unixtimeStamp));
 			series.add(d, p.costs);
