@@ -7,6 +7,10 @@ public class PropertyHelper {
 
 	static Properties properties;
 
+	// there is the option to put the init functionality in the getProperty
+	// function. It would allow to edit the properties file at runtime but can also
+	// slow down the program.
+
 	public static void init() {
 		properties = new Properties();
 
