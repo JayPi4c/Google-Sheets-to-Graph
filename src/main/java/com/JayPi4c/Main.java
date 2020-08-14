@@ -23,8 +23,21 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 //http://zetcode.com/java/jfreechart/
 public class Main {
 	public static void main(String... args) throws IOException, GeneralSecurityException {
-		final String spreadsheetId = args.length > 0 ? args[0] : "17Dy3kRz5EAhK6_zimq8lOMbBz6OsEdqxmDdHdx_PX1s";
-		final String range = "A:B";
+		PropertyHelper.init();
+
+		String spreadsheetId;
+		if (args.length > 0)
+			spreadsheetId = args[0];
+		else if ((spreadsheetId = PropertyHelper.getProperty("spreadsheet.ID")) == null)
+			exitByError("No spreadsheetID given.", 1);
+
+		String range;
+
+		if (args.length > 1)
+			range = args[0];
+		else if ((range = PropertyHelper.getProperty("spreadsheet.range")) == null)
+			exitByError("No spreadsheet range given", 1);
+
 		Sheets service = SpreadsheetConnector.getService();
 
 		HashMap<Number, Number> map = getValues(service, spreadsheetId, range);
@@ -53,6 +66,8 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		System.out.println("finished successfully");
 
 		/*
 		 * for (Map.Entry<Number, Number> entry : sortedMap.entrySet()) {
@@ -116,4 +131,10 @@ public class Main {
 	 * chart, 800, 400); } catch (IOException e) { e.printStackTrace(); }
 	 */
 	/* } */
+
+	static void exitByError(String error, int exitcode) {
+		System.err.println(error);
+		System.err.println("exiting...");
+		System.exit(exitcode);
+	}
 }
