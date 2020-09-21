@@ -17,6 +17,11 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 import org.jfree.graphics2d.svg.SVGUtils;
 
+import com.JayPi4c.utils.DataPair;
+import com.JayPi4c.utils.Graph;
+import com.JayPi4c.utils.PropertyHelper;
+import com.JayPi4c.utils.SpreadsheetConnector;
+import com.JayPi4c.view.Frame;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
@@ -28,15 +33,23 @@ public class Main {
 		String spreadsheetId;
 		if (args.length > 0)
 			spreadsheetId = args[0];
-		else if ((spreadsheetId = PropertyHelper.getProperty("spreadsheet.ID")) == null)
-			exitByError("No spreadsheetID given.", 1);
+		else if ((spreadsheetId = PropertyHelper.getProperty("google.spreadsheet.ID")) == null)
+			exitByError("No spreadsheetID given", 1);
 
 		String range;
 
 		if (args.length > 1)
-			range = args[0];
-		else if ((range = PropertyHelper.getProperty("spreadsheet.range")) == null)
+			range = args[1];
+		else if ((range = PropertyHelper.getProperty("google.spreadsheet.range")) == null)
 			exitByError("No spreadsheet range given", 1);
+
+		String name = null;
+		if (args.length > 2)
+			name = args[2];
+		else
+			name = PropertyHelper.getProperty("google.spreadsheet.name");
+		if (name != null)
+			range = name + "!" + range;
 
 		Sheets service = SpreadsheetConnector.getService();
 
@@ -63,8 +76,10 @@ public class Main {
 			Rectangle r = new Rectangle(0, 0, 800, 400);
 			chart.draw(g2, r);
 			SVGUtils.writeToSVG(chartFile = new File("./chart.svg"), g2.getSVGElement());
-
 			new Frame(chartFile);
+
+			// File chartFile = new File("./chart.svg");
+			// new Frame(chartFile);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -72,11 +87,11 @@ public class Main {
 
 		System.out.println("finished successfully");
 
-		/*
-		 * for (Map.Entry<Number, Number> entry : sortedMap.entrySet()) {
-		 * System.out.printf("%s, %s\n", new Date((Long)
-		 * entry.getKey()).toString().substring(4, 10), entry.getValue()); }
-		 */
+		// for (Map.Entry<Number, Number> entry : sortedMap.entrySet()) {
+		// System.out.printf("%s, %s\n", new Date((Long)
+		// entry.getKey()).toString().substring(4, 10),
+		// entry.getValue());
+		// }
 
 	}
 
@@ -100,6 +115,7 @@ public class Main {
 					e.printStackTrace();
 				}
 				long keyVal = d.getTime();
+				// removes the € sign from the cells value
 				Double val = Double.parseDouble(((String) row.get(1)).replaceAll("\\u20AC", "").replace(',', '.'));
 				if (map.containsKey(keyVal)) {
 					Double value = (Double) map.get(keyVal);

@@ -1,4 +1,4 @@
-package com.JayPi4c;
+package com.JayPi4c.utils;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -37,7 +37,8 @@ public class Graph {
 		domainAxis.setTickMarkPosition(DateTickMarkPosition.MIDDLE);
 		ValueAxis rangeAxis = new NumberAxis(Messages.getString("chart.axis.name.y"));
 		XYPlot plot = new XYPlot(data1, domainAxis, rangeAxis, renderer1);
-
+		plot.getRangeAxis().setRange(Double.parseDouble(PropertyHelper.getProperty("graph.y.min")),
+				Double.parseDouble(PropertyHelper.getProperty("graph.y.max")));
 		XYDataset data2 = createCostsDataset(pairs);
 		XYItemRenderer renderer2 = new XYBarRenderer();
 		renderer2.setSeriesPaint(0, new Color(135, 206, 250));

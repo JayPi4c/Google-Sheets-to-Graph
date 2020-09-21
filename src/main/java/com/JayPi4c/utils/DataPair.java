@@ -1,17 +1,17 @@
-package com.JayPi4c;
+package com.JayPi4c.utils;
 
 import java.util.Date;
 
 public class DataPair {
 
-	public static final Date STARTDATE = new Date(Long.parseLong(PropertyHelper.getProperty("startdate")));
+	public static final Date STARTDATE = new Date(Long.parseLong(PropertyHelper.getProperty("graph.startdate")));
 	public static final long MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
 
 	long unixtimeStamp;
 	String datePart;
 	Date date;
 	double costs = 0;
-	double summedCosts = 0;
+	public double summedCosts = 0;
 	double averageCosts = 0;
 	int daysPast;
 
@@ -24,7 +24,7 @@ public class DataPair {
 		daysPast = (int) (diff / MILLIS_IN_DAY);
 	}
 
-	void addToSummedCosts(double previousCosts) {
+	public void addToSummedCosts(double previousCosts) {
 		summedCosts = costs + previousCosts;
 		averageCosts = summedCosts / daysPast;
 	}

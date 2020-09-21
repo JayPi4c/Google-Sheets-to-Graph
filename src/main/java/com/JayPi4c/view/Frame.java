@@ -1,4 +1,4 @@
-package com.JayPi4c;
+package com.JayPi4c.view;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -9,7 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 
 import org.apache.batik.gvt.GraphicsNode;
@@ -21,12 +25,19 @@ import org.apache.batik.swing.svg.GVTTreeBuilderEvent;
 import org.apache.batik.swing.svg.SVGDocumentLoaderAdapter;
 import org.apache.batik.swing.svg.SVGDocumentLoaderEvent;
 
-public class Frame extends JFrame {
+import com.JayPi4c.utils.ILanguageChangeListener;
+import com.JayPi4c.utils.Messages;
+import com.JayPi4c.utils.Utils;
+
+public class Frame extends JFrame implements ILanguageChangeListener {
 
 	private static final long serialVersionUID = 1L;
 
+	JMenu file, options;
+	JMenuItem save, saveAs, settings;
+
 	public Frame(File chartSVG) {
-		super("Sheets to Graph");
+		super(Messages.getString("Frame.title"));
 
 		String url = chartSVG.toURI().toString();
 		// System.out.println(url);
@@ -73,6 +84,7 @@ public class Frame extends JFrame {
 			@Override
 			public void gvtRenderingCompleted(GVTTreeRendererEvent e) {
 				System.out.println("Rendering Done.");
+				setLocationRelativeTo(null);
 
 			}
 		});
@@ -81,10 +93,42 @@ public class Frame extends JFrame {
 
 		getContentPane().add(canvas);
 		setIcon("com/JayPi4c/assets/icon.png");
+
+		JMenuBar menuBar = new JMenuBar();
+		file = new JMenu(Messages.getString("Frame.file"));
+		save = new JMenuItem(Messages.getString("Frame.save"));
+		save.addActionListener(e -> Utils.saveImage(chartSVG, "."));
+		saveAs = new JMenuItem(Messages.getString("Frame.saveAs"));
+		saveAs.addActionListener(e -> {
+			JFileChooser chooser = new JFileChooser();
+			chooser.setCurrentDirectory(new java.io.File("."));
+			chooser.setDialogTitle("choose save location");
+			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			chooser.setAcceptAllFileFilterUsed(false);
+			if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+				Utils.saveImage(chartSVG, chooser.getCurrentDirectory().toString());
+
+		});
+
+		file.add(save);
+		file.add(saveAs);
+		menuBar.add(file);
+		options = new JMenu(Messages.getString("Frame.options"));
+		settings = new JMenuItem(Messages.getString("Frame.settings"));
+		settings.addActionListener(e -> {
+			if (!SettingsFrame.isActive)
+				new SettingsFrame(this);
+		});
+		options.add(settings);
+		menuBar.add(options);
+
+		setJMenuBar(menuBar);
+
 		setVisible(true);
 
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		Messages.registerListener(this);
 	}
 
 	void setIcon(String path) {
@@ -95,6 +139,16 @@ public class Frame extends JFrame {
 			e.printStackTrace();
 		}
 		setIconImages(icons);
+	}
+
+	@Override
+	public void onLanguageChanged() {
+		setTitle(Messages.getString("Frame.title"));
+		file.setText(Messages.getString("Frame.file"));
+		save.setText(Messages.getString("Frame.save"));
+		saveAs.setText(Messages.getString("Frame.saveAs"));
+		options.setText(Messages.getString("Frame.options"));
+		settings.setText(Messages.getString("Frame.settings"));
 	}
 
 }
